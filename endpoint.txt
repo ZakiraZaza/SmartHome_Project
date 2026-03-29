@@ -1,0 +1,5 @@
+a16zv792co800v-ats.iot.eu-central-1.amazonaws.com
+
+Endpoint dobijen putem CloudShell-a (gornji desni ugao AWS stranice ikonica koja izgleda kao terminal >_. To je CloudShell) pomoću naredbe:
+aws iot describe-endpoint --endpoint-type iot:Data-ATS
+

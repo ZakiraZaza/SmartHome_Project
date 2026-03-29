@@ -1,0 +1,13 @@
+endpoint je koristen za konekciju pythona i awsa (koristeno u kodu .py)
+results sadrzi tabelu kreiranu u dinamu
+subscription je test veze MQTT
+dir za provjeru fajlova u folderu u terminalu
+
+PS C:\Users\zakir> python --version
+Python 3.12.10
+PS C:\Users\zakir> pip install AWSIoTPythonSDK
+
+
+PS C:\Users\zakir> cd OneDrive\Desktop\SmartHome_Project\TempSensor_01
+
+PS C:\Users\zakir\OneDrive\Desktop\SmartHome_Project\TempSensor_01> python3 sensor.py

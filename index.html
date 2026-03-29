@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigurna Smart Home Platforma</title>
+    <!-- Ucitavamo AWS Cognito biblioteku -->
+    <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js/dist/amazon-cognito-identity.min.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 10px; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; margin-top: 10px; }
+        .btn-login { background-color: #0073bb; }
+        .btn-on { background-color: #28a745; margin-bottom: 5px;}
+        .btn-off { background-color: #dc3545; }
+        #control-panel { display: none; } /* Sakriveno dok se ne ulogujes */
+        #login-error { color: red; font-size: 12px; display: none; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+
+    <!-- FORMA ZA LOGIN -->
+    <div id="login-panel" class="card">
+        <h2>🔐 Prijava</h2>
+        <input type="text" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Šifra">
+        <button class="btn-login" onclick="login()">ULOGUJ SE</button>
+        <p id="login-error"></p>
+    </div>
+
+    <!-- KONTROLNA PLOCA (Sakrivena) -->
+    <div id="control-panel" class="card">
+        <h2>🏠 Smart Home</h2>
+        <p>Dobrodošli, <span id="user-email"></span>!</p>
+        <hr>
+        <button class="btn-on" onclick="controlLight('ON')">UPALI SVJETLO 💡</button>
+        <button class="btn-off" onclick="controlLight('OFF')">UGASI SVJETLO 🌑</button>
+        <p id="status" style="margin-top: 15px; font-size: 13px; color: gray;">Spreman.</p>
+        <button onclick="logout()" style="background-color: #666; margin-top: 20px;">Odjavi se</button>
+    </div>
+
+    <script>
+        // --- KONFIGURACIJA (OVDJE UNESI SVOJE PODATKE) ---
+        var poolData = {
+            UserPoolId: 'eu-central-1_lpP7Zu1Jf', // <-- TVOJ USER POOL ID
+            ClientId: '4md5i5s7duqp566ojg9lgjb7l4'       // <-- TVOJ CLIENT ID
+        };
+        const API_URL = "https://30xbkagg5f.execute-api.eu-central-1.amazonaws.com/dev/light"; // <-- TVOJ API LINK
+
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        var cognitoUser;
+        var idToken = null;
+
+        function login() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var authenticationData = { Username: email, Password: password };
+            var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+            
+            var userData = { Username: email, Pool: userPool };
+            cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+            document.getElementById('login-error').style.display = 'none';
+
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function (result) {
+                    // Login uspio!
+                    idToken = result.getIdToken().getJwtToken(); // Ovo je nas kljuc za API
+                    
+                    document.getElementById('login-panel').style.display = 'none';
+                    document.getElementById('control-panel').style.display = 'block';
+                    document.getElementById('user-email').innerText = email;
+                    console.log("Token dobijen:", idToken);
+                    
+                    // Provjera da li treba mijenjati sifru (Novi korisnici)
+                },
+                onFailure: function (err) {
+                    document.getElementById('login-error').innerText = err.message || JSON.stringify(err);
+                    document.getElementById('login-error').style.display = 'block';
+                },
+                newPasswordRequired: function(userAttributes, requiredAttributes) {
+                    // Ako je prvi login, Cognito trazi novu sifru. 
+                    // Za demo, samo cemo ponovo postaviti istu ili novu hardkodiranu da prodje.
+                    // U pravoj app ovdje bi iskocio prozor "Unesite novu sifru".
+                    var newPw = prompt("Prvi login! Molimo unesite novu šifru:", password);
+                    cognitoUser.completeNewPasswordChallenge(newPw, {}, this);
+                }
+            });
+        }
+
+        async function controlLight(action) {
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerText = "Šaljem...";
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": idToken // <--- OVO JE KLJUC SIGURNOSTI!
+                    },
+                    body: JSON.stringify({ action: action })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.innerText = "Uspjeh: " + data;
+                    statusDiv.style.color = "green";
+                } else {
+                    statusDiv.innerText = "Greška: Pristup odbijen (401)";
+                    statusDiv.style.color = "red";
+                }
+            } catch (error) {
+                console.error(error);
+                statusDiv.innerText = "Greška u komunikaciji";
+            }
+        }
+
+        function logout() {
+            if (cognitoUser) {
+                cognitoUser.signOut();
+            }
+            location.reload();
+        }
+    </script>
+</body>
+</html>
