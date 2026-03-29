@@ -5,9 +5,8 @@ Fokus rada je na implementaciji sigurnosnih mehanizama u IoT sistemima korišten
 Cilj ovog projekta je dizajn i implementacija prototipa sigurne, centralizovane platforme za pametne uređaje koja rješava problem fragmentacije IoT uređaja i njihovih sigurnosnih ranjivosti. 
 Platforma omogućava povezivanje različitih uređaja (senzori temperature, pametna svjetla), prikupljanje telemetrijskih podataka i daljinsko upravljanje.
 
-
 <div align="center">
-  ![master drawio](https://github.com/user-attachments/assets/2029914d-27ff-458a-b65e-11d0d7d3c146)
+  <img src="https://github.com/user-attachments/assets/2029914d-27ff-458a-b65e-11d0d7d3c146" alt="master drawio" width="600"/>
   <br>
   <i>Slika 1: Arhitektura sistema</i>
 </div>
