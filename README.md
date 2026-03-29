@@ -6,7 +6,7 @@ Cilj ovog projekta je dizajn i implementacija prototipa sigurne, centralizovane 
 Platforma omogućava povezivanje različitih uređaja (senzori temperature, pametna svjetla), prikupljanje telemetrijskih podataka i daljinsko upravljanje.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/2029914d-27ff-458a-b65e-11d0d7d3c146" alt="master drawio" width="600"/>
+  <img src="https://github.com/user-attachments/assets/2029914d-27ff-458a-b65e-11d0d7d3c146" alt="master drawio" width="800"/>
   <br>
   <i>Slika 1: Arhitektura sistema</i>
 </div>
