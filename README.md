@@ -4,8 +4,14 @@ Ovaj projekat je realizovan kao praktični dio **Master teze** na **Elektrotehni
 Fokus rada je na implementaciji sigurnosnih mehanizama u IoT sistemima korištenjem Amazon Web Services (AWS) infrastrukture.
 Cilj ovog projekta je dizajn i implementacija prototipa sigurne, centralizovane platforme za pametne uređaje koja rješava problem fragmentacije IoT uređaja i njihovih sigurnosnih ranjivosti. 
 Platforma omogućava povezivanje različitih uređaja (senzori temperature, pametna svjetla), prikupljanje telemetrijskih podataka i daljinsko upravljanje.
+![master drawio](https://github.com/user-attachments/assets/2029914d-27ff-458a-b65e-11d0d7d3c146)
 
-![Arhitektura Sistema]([OVDJE UBACI SLIKU: Dijagram arhitekture sistema - npr. nacrt kako Python komunicira sa IoT Core, Lambda, DynamoDB i Cognito])
+
+<div align="center">
+  <img src="assets/diagrams/draw_io/images/amarisoft.drawio.svg" alt="amarisoft.drawio.svg" title="Arhitektura sistema">
+  <br>
+  <i>Slika 1: Arhitektura sistema</i>
+</div>
 
 ## Korištene tehnologije
 
